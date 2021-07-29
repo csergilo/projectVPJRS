@@ -61,7 +61,6 @@ mGeV = hadronList['col5'].values.tolist() # particle mass (in MeV)
 # m = mGeV # for results in GeV
 m = [element * 1000 for element in mGeV] # uncomment for result in MeV
 
-# print(m)
 
 partons = partonList[0]
 g_Partons = partonList[1]
@@ -103,18 +102,6 @@ plt.plot(temp,pressureHadronGas, "r", label='Hadron Gas')
 plt.plot(temp,pressureQGP, "b", label='Quarks and Gluons')
 # plt.plot(temp,pressureQGPMass, "g", label='Quarks and Gluons - massive')
 
-# # Plot style and configurations
-# font_title = {'family': 'serif',
-#         'weight': 'normal',
-#         'size': 18,
-#         }
-
-# font_axis = {'family': 'serif',
-#         'weight': 'normal',
-#         'size': 14,
-#         }
-
-# plt.xlabel('Temperature $(K)$', fontdict = font_axis)
 plt.xlabel('Temperature (K)')
 plt.ylabel('Pressure (MeV$^{4}$)')
 
