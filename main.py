@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Point
 
 #============================
-# Function to be integrated #
+# User defined functions    #
 #============================
 # Pressure of non-interacting gas
 def fPressure(p,num,T,key):
@@ -36,12 +36,11 @@ def fPressure(p,num,T,key):
 #============================
 # Declaration of variables
 # ---------------------------
-lowerLimit = 0 # lower limit for integral: 0
-upperLimit = np.inf # upper limit for integral: +infinity
 Tmin = 150 # min. temperature (in MeV)
 Tmax = 190 # max. temperature (in MeV)
 B = 236**4 # bag constant in (MeV^4) according to hadron spectroscopy results
-
+lowerLimit = 0 # lower limit for integral: 0
+upperLimit = np.inf # upper limit for integral: +infinity
 # -----------------------------
 temp = []
 pressureHadronGas = []
@@ -50,16 +49,16 @@ pressureQGPMass = []
 # -----------------------------
 
 # Path to the directory containing the hadronList.txt file
-path_hadrons = os.path.join(sys.path[0], 'hadronList.txt')
+path_hadrons = os.path.join(sys.path[0], "hadronList.txt")
 
 # Reads the txt input file
 hadronList = pd.read_table(path_hadrons, sep="\s+")
 
 # Lists corresponding to columns with the particle name, g-Factor, +-1 referring to fermions/bosons and particle mass
-hadrons = hadronList['col1'].values.tolist() # name of particle
-g = hadronList['col3'].values.tolist() # degeneracy factor
-pm1 = hadronList['col4'].values.tolist() # +1 or -1 (fermion or boson)
-mGeV = hadronList['col5'].values.tolist() # particle mass (in GeV)
+hadrons = hadronList["col1"].values.tolist() # name of particle
+g = hadronList["col3"].values.tolist() # degeneracy factor
+pm1 = hadronList["col4"].values.tolist() # +1 or -1 (fermion or boson)
+mGeV = hadronList["col5"].values.tolist() # particle mass (in GeV)
 mass = [element * 1000 for element in mGeV] # uncomment for result in MeV
 
 # Table for massless quarks and gluons is defined below
@@ -105,14 +104,17 @@ for T in np.arange(Tmin, Tmax+1, 1):
 # Plotting                  #
 #============================
 
-plt.plot(temp,pressureHadronGas, "k", label='Hadron Gas')
-plt.plot(temp,pressureQGP, "b", label='QGP; u,d quarks')
-plt.plot(temp,pressureQGPMass, "g", label='QGP; u,d,s quarks')
+# Data plotting
+plt.plot(temp,pressureHadronGas, "k", label="Hadron Gas")
+plt.plot(temp,pressureQGP, "b", label="QGP; u,d quarks")
+plt.plot(temp,pressureQGPMass, "g", label="QGP; u,d,s quarks")
 
-plt.title('Transition temperature: Hadron Gas to QGP')
-plt.xlabel('Temperature (K)')
-plt.ylabel('Pressure (MeV$^{4}$)')
+# Axis labels and title
+plt.title("Transition temperature: Hadron Gas to QGP")
+plt.xlabel("Temperature (K)")
+plt.ylabel("Pressure (MeV$^{4}$)")
 
+# Calculates and plots the intersection of the curves
 curve_1 = LineString(np.column_stack((temp,pressureHadronGas)))
 curve_2 = LineString(np.column_stack((temp,pressureQGP)))
 curve_3 = LineString(np.column_stack((temp,pressureQGPMass)))
@@ -120,13 +122,10 @@ curve_3 = LineString(np.column_stack((temp,pressureQGPMass)))
 T_tr_massless = curve_1.intersection(curve_2)
 T_tr_massive = curve_1.intersection(curve_3)
 
-# print (T_tr_massless.x)
-# print (T_tr_massive.x)
-
 plt.plot(*T_tr_massless.xy, "rv")
 plt.plot(*T_tr_massive.xy, "r*")
 plt.text(T_tr_massless.x+0.5, T_tr_massless.y-2e8, "$T_{tr}= $" + "{:.1f}".format(T_tr_massless.x))
-plt.text(T_tr_massive.x+0.5, T_tr_massive.y-2e8, '$T_{tr}= $' + "{:.1f}".format(T_tr_massive.x))
+plt.text(T_tr_massive.x+0.5, T_tr_massive.y-2e8, "$T_{tr}= $" + "{:.1f}".format(T_tr_massive.x))
 
 plt.legend()
 plt.savefig("pressureVsTemp.png", dpi=300)
